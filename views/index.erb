@@ -4,16 +4,52 @@
       body {
         background: <%= color %>;
       }
+
+      .row {
+      	text-align: center;
+      	display: inline-block;
+      	width: 100%;
+      }
+
+      form {
+      	margin: auto;
+      	width: 90%;
+      }
+
+      input.guess {
+      	width: 75%;
+      	height: 25vh;
+      	font-size: 8em;
+      	float: left;
+      }
+
+      input.submit {
+      	height: 25vh;
+      	width: 25%;
+      	float: left;
+      	background-color: #000;
+      	color: #fff;
+      }
+
+      p {
+      	font-size: 5em;
+      	font-family: Lato, sans-serif;
+      	text-align: center;
+      }
     </style>
   </head>
   
   <body>
+  	<div class="row">
    	<form>
-		  <input type='text' name='guess' />
-		  <input type='submit' value='Guess!' />
+		  <input class='guess' type='text' name='guess' />
+		  <input class='submit' type='submit' value='Guess!' />
 		</form>
+	</div>
+	<div class"row">
 		<p>
       <%= message %> 
     </p>
+  </div>
   </body>
 </html>
