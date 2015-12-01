@@ -1,11 +1,23 @@
 <html>
-<head>
-</head>
-<body>
-	<form action="/" method="POST">
-		Choose level: <input type="text" name="Easy, Medium, or Hard">
-		<input type="submit">
-	</form>
-	<p><%= word %></p>
-</body>
+	<head>
+		<title>Ellen's Hangman</title>
+	</head>
+
+	<body>
+		<form>
+			<h1>
+			<% word_length.times do %>
+					<%= print '-' %>
+			<% end %>
+			</h1>
+			<p>Guess a letter</p>
+			<input class='guess' type='text' name='guess' />
+			<input class='submit' type='submit' value='Guess' />
+		</form>
+		<p>The word is <%= @@word %></p>
+		<p>Turns left: <%= turns %></p>
+		<p><%= message %></p>
+		<input type="submit" value="Play Again" class="again" action="/">
+	</body>
+
 </html>
