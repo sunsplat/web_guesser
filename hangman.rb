@@ -1,33 +1,12 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-# get '/' do
-# 	@@turns = 5
-# 	guess = params["guess"]
-# 	message = check_guess(guess, word)
-# 	letter = add_letter(message)
-# 	erb :hangman_level, :locals => {:word => word, :letter => letter, :message => message}
-# end
-
-# def check_guess(guess, word)
-# 	word = word.split
-# 	if word.include?(guess)
-# 		return letter
-# 	else
-
-# 	end
-# end
-
-
-
 # { |file| file.readlines }
 
 file = File.open("enable.txt", "r") 
 @@contents = file.read.split
 
-@@word_length = 0
 @@turns = 0
-@@dash = '-' 
 @@current_string = '_' * @@word_length
 
 get '/' do
@@ -63,7 +42,7 @@ post '/new/' do
 		else
 			@@current_string = show_dash(@@current_string, guess, letter_index)
 		end
-		message = check_win(@@current_string, @@word)
+		message = check_win(@@current_string, @@word, @@turns)
 
 		# message = set_message(@@current_string, @@word)
 
@@ -110,17 +89,22 @@ def check_guesses(guess, word)
 end
 
 def show_dash(current_string, guess, letter_index)
-	current_string = current_string.to_s.split('')
+	current_string = current_string.split('')
 	letter_index.each {|x| current_string[x] = guess}
 
 	@@win = true if !current_string.include?('_')
 	return current_string.join('')
 end
 
-def check_win(current_string, word)
-	if current_string == word
+def check_win(current_string, word, turns)
+	if current_string == word && turns < 5
 		@@win == true
 		message = "You guessed the word! Play again?"
+	elsif current_string != word && turns == 5
+		@@win == true
+		message = "Sorry, the word was #{word}. Play again?"
+	else
+		message = "Guess Again!"
 	end
 
 end
@@ -128,11 +112,11 @@ end
 
 def new_game
 	@@turns = 5
-	guess = []
+	guess = nil
 	@@word = ''
 	@@win = false
 	@@word_length = 0
-	@@current_string = '-' * @@word_length
+	@@current_string = '_' * @@word_length
 	redirect '/'
 end
 
