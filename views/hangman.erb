@@ -5,9 +5,9 @@
 
 	<body>
 		<form>
-			<h1>
+			<h1>WORD: 
 			<% word_length.times do %>
-					<%= print '-' %>
+					<%= dash %>
 			<% end %>
 			</h1>
 			<p>Guess a letter</p>
@@ -17,7 +17,9 @@
 		<p>The word is <%= @@word %></p>
 		<p>Turns left: <%= turns %></p>
 		<p><%= message %></p>
-		<input type="submit" value="Play Again" class="again" action="/">
+		<form action="/" method="get">
+		<input type="submit" value="Play Again" class="again">
+	</form>
 	</body>
 
 </html>
