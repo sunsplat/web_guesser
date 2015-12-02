@@ -6,9 +6,7 @@
 	<body>
 		<form action="/new/" method="post">
 			<h1>WORD: 
-			<% @@word_length.times do %>
-					<%= @@dash %>
-			<% end %>
+					<%= @@current_string %>
 			</h1>
 			<p>Guess a letter</p>
 			<input class='guess' type='text' name='guess' />
@@ -16,8 +14,8 @@
 		</form>
 
 		<p>The word is <%= @@word %></p>
-		<p>Turns left: <%= @@turns %></p>
-		<p>Wrong guesses: <%= @@wrong_guess %></p>
+		<p>Turns left: <%= 5 - @@turns %></p>
+		<p>Wrong guesses: <%= @@wrong_guess.join(', ') %></p>
 		<p><%= message %></p>
 
 		<form action="/" method="get">
