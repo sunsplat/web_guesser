@@ -7,7 +7,7 @@ file = File.open("enable.txt", "r")
 @@contents = file.read.split
 
 @@turns = 0
-@@current_string = '_' * @@word_length
+# @@current_string = '_' * @@word_length
 
 get '/' do
 	erb :hangman_level
@@ -21,6 +21,7 @@ end
 
 get '/new/' do #get setup
 	@@word_length = choose_difficulty(@@choice)
+	@@current_string = '_' * @@word_length
 	@@word = answer(@@word_length, @@contents)
 	message = set_message(@@current_string, @@word)
 	# @@turns = 5
@@ -50,7 +51,6 @@ post '/new/' do
 		:turns => @@turns, 
 		:word_length => @@word_length,
 		:wrong_guess => @@wrong_guess,
-		:dash => @@dash,
 		:message => message, 
 		:word => @@word
 	}
