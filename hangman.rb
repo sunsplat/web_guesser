@@ -20,25 +20,15 @@ require 'sinatra/reloader'
 
 
 
-# # # { |file| file.readlines }
+# { |file| file.readlines }
 
-	file = File.open("enable.txt", "r") 
-	contents = file.read.split
-# 	split_words = []
-# 	contents.each do |line|
-# 		if !(split_words.include? line.split(''))
-# 			split_words.push(line.split(''))
-# 		end
-# 	end
-# 	return split_words
-# 	# return contents
-# end
+file = File.open("enable.txt", "r") 
+@@contents = file.read.split
 
-# # all_words = make_words
 @@word_length = 0
+@@turns = 0
 @@dash = '-' 
-@@current_string = '-' * @@word_length
-
+@@current_string = '_' * @@word_length
 
 get '/' do
 	erb :hangman_level
@@ -52,10 +42,15 @@ end
 
 get '/new/' do #get setup
 	@@word_length = choose_difficulty(@@choice)
-	@@word = answer(@@word_length, contents)
+	@@word = answer(@@word_length, @@contents)
 	message = set_message(@@current_string, @@word)
-	@@turns = 5
-	erb :hangman, :locals => {:turns => @@turns, :message => message, :word => @@word}
+	# @@turns = 5
+	erb :hangman, :locals => {
+		:turns => @@turns, 
+		:message => message, 
+		:word => @@word, 
+		:turns => @@turns
+	}
 end
 
 post '/new/' do
@@ -64,12 +59,13 @@ post '/new/' do
 		letter_index = check_guesses(guess, @@word)
 		if letter_index.nil?
 			@@wrong_guess.push(guess)
-			@@turns -= 1
+			@@turns += 1
 		else
 			@@current_string = show_dash(@@current_string, guess, letter_index)
 		end
-		@@turns = change_turns(@@turns)
-		message = set_message(@@current_string, @@word)
+		message = check_win(@@current_string, @@word)
+
+		# message = set_message(@@current_string, @@word)
 
 	erb :hangman, :locals => {
 		:turns => @@turns, 
@@ -77,7 +73,8 @@ post '/new/' do
 		:wrong_guess => @@wrong_guess,
 		:dash => @@dash,
 		:message => message, 
-		:word => @@word}
+		:word => @@word
+	}
 end
 
 
@@ -102,39 +99,40 @@ def answer(word_length, all_words)
 end	
 
 
-def change_turns(turns)
-	if turns > 0
-		turns -= 1
-	else
-		new_game
-	end
-end
-
 def check_guesses(guess, word)
-	letters = []
-	word = word.to_s.split('')
+	letter_index = []
+	word = word.split('')
 	# saves index number to display letter in view
 	word.each_with_index do |x, i|
-		letters << i if x == guess
+		letter_index.push(i) if x == guess
 	end
-	letters.empty? ? nil : letters
+	letter_index.empty? ? nil : letter_index
 end
 
 def show_dash(current_string, guess, letter_index)
 	current_string = current_string.to_s.split('')
-print "START HERE"
-print letter_index
-print "HELLO"
 	letter_index.each {|x| current_string[x] = guess}
 
-	@@win = true if !current_string.include?('-')
-	return current_string.join
+	@@win = true if !current_string.include?('_')
+	return current_string.join('')
 end
 
+def check_win(current_string, word)
+	if current_string == word
+		@@win == true
+		message = "You guessed the word! Play again?"
+	end
+
+end
+
+
 def new_game
-	turns = 5
+	@@turns = 5
+	guess = []
 	@@word = ''
 	@@win = false
+	@@word_length = 0
+	@@current_string = '-' * @@word_length
 	redirect '/'
 end
 
