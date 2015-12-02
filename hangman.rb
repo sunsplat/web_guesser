@@ -51,28 +51,29 @@ require 'sinatra/reloader'
 
 # # all_words = make_words
 turns = 5
-word_length = 0 
+word_length = 0
+dash = '-' 
+guess = []
 
 get '/' do
+	@@choice = params["level"]
+	redirect '/new/' if @@choice
 	erb :hangman_level
 end
 
+
 get '/new/' do
-	@@word = ""
-	@@choice = params["level"]
-	turns = change_turns(turns)
-	# if turns == 4
-		@@choice = params["level"]
 		word_length = choose_difficulty(@@choice)
-		guess = params["guess"]
-		@@message = check_guesses(guess, @@word)
+		guess << params["guess"]
 		@@word = answer(word_length, contents)
-	# end 
+		all_guesses = check_guesses(guess, @@word)
+		@@message = show_dash(guess, @@word) # message(all_guesses, @@word)
+		turns = change_turns(turns)
 
 	erb :hangman, :locals => {
 		:turns => turns, 
 		:word_length => word_length,
-		# :level => level,
+		:dash => dash,
 		:message => @@message, 
 		:word => @@word}
 end
@@ -87,11 +88,13 @@ def choose_difficulty(choice)
 	# choice = choice.chomp.downcase
 	if choice == "easy"
 		word_length = 3
+
 	elsif choice == "medium"
 		word_length = 10
 	else
 		word_length = 15
 	end
+	return word_length
 end
 
 def answer(word_length, all_words)
@@ -106,7 +109,6 @@ def change_turns(turns)
 	if turns > 0
 		turns -= 1
 	else
-		"Game Over"
 		new_game
 	end
 end
@@ -130,18 +132,22 @@ def check_guesses(guess, word)
 	letters.empty? ? nil : letters
 end
 
+def show_dash(all_guesses, word)
+	word = word.to_s.split('')
+	# word.each_with_index do |x, i|
+	# 	dash.
+	# puts all_guesses
+	# puts word
+
+	
+end
 
 def new_game
 	turns = 5
+	redirect '/'
 end
 
 
-# def check_guesses(guess, word)
-# 	letters = []
-# 	word = word.split('')
-# 	word.each_with_index do |x, i|
-# 		letters << i if x == guess
-# 	end
-# 	letters.empty? ? nil : letters
-# end
+def message(guess, word)
+end
 
