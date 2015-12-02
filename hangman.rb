@@ -1,8 +1,6 @@
 require 'sinatra'
 require 'sinatra/reloader'
 
-# word = contents.sample
-
 # get '/' do
 # 	@@turns = 5
 # 	guess = params["guess"]
@@ -22,21 +20,8 @@ require 'sinatra/reloader'
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-# # # split_words.sort.join('|')
-
 # # # { |file| file.readlines }
-# def make_words
+
 	file = File.open("enable.txt", "r") 
 	contents = file.read.split
 # 	split_words = []
@@ -50,38 +35,50 @@ require 'sinatra/reloader'
 # end
 
 # # all_words = make_words
-turns = 5
-word_length = 0
-dash = '-' 
-guess = []
+@@word_length = 0
+@@dash = '-' 
+@@current_string = '-' * @@word_length
+
 
 get '/' do
-	@@choice = params["level"]
-	redirect '/new/' if @@choice
 	erb :hangman_level
 end
 
-
-get '/new/' do
-		word_length = choose_difficulty(@@choice)
-		guess << params["guess"]
-		@@word = answer(word_length, contents)
-		all_guesses = check_guesses(guess, @@word)
-		@@message = show_dash(guess, @@word) # message(all_guesses, @@word)
-		turns = change_turns(turns)
-
-	erb :hangman, :locals => {
-		:turns => turns, 
-		:word_length => word_length,
-		:dash => dash,
-		:message => @@message, 
-		:word => @@word}
+post '/' do
+	@@choice = params["level"]
+	@@wrong_guess = []
+	redirect '/new/' if @@choice
 end
 
-# get '/' do
-# 	level = params["level"]
-# 	# erb :hangman_level, :locals => {:turns => turns}
-# end
+get '/new/' do #get setup
+	@@word_length = choose_difficulty(@@choice)
+	@@word = answer(@@word_length, contents)
+	message = set_message(@@current_string, @@word)
+	@@turns = 5
+	erb :hangman, :locals => {:turns => @@turns, :message => message, :word => @@word}
+end
+
+post '/new/' do
+		# word_length = choose_difficulty(@@choice)
+		guess = params["guess"]
+		letter_index = check_guesses(guess, @@word)
+		if letter_index.nil?
+			@@wrong_guess.push(guess)
+			@@turns -= 1
+		else
+			@@current_string = show_dash(@@current_string, guess, letter_index)
+		end
+		@@turns = change_turns(@@turns)
+		message = set_message(@@current_string, @@word)
+
+	erb :hangman, :locals => {
+		:turns => @@turns, 
+		:word_length => @@word_length,
+		:wrong_guess => @@wrong_guess,
+		:dash => @@dash,
+		:message => message, 
+		:word => @@word}
+end
 
 
 def choose_difficulty(choice)
@@ -114,15 +111,6 @@ def change_turns(turns)
 end
 
 def check_guesses(guess, word)
-	# word = word.split('')
-	# puts word
-
-	# if word.include?(guess)
-	# 	"There is a" + letter
-	# else
-	# 	"Guess Again"
-	# end
-
 	letters = []
 	word = word.to_s.split('')
 	# saves index number to display letter in view
@@ -132,22 +120,26 @@ def check_guesses(guess, word)
 	letters.empty? ? nil : letters
 end
 
-def show_dash(all_guesses, word)
-	word = word.to_s.split('')
-	# word.each_with_index do |x, i|
-	# 	dash.
-	# puts all_guesses
-	# puts word
+def show_dash(current_string, guess, letter_index)
+	current_string = current_string.to_s.split('')
+print "START HERE"
+print letter_index
+print "HELLO"
+	letter_index.each {|x| current_string[x] = guess}
 
-	
+	@@win = true if !current_string.include?('-')
+	return current_string.join
 end
 
 def new_game
 	turns = 5
+	@@word = ''
+	@@win = false
 	redirect '/'
 end
 
 
-def message(guess, word)
+def set_message(guess, word)
+	"Your guess is #{guess} and the word is #{word}"
 end
 
