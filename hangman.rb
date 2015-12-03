@@ -23,7 +23,7 @@ end
 
 get '/new/' do #get setup
 	@@word_length = choose_difficulty(@@choice)
-	@@current_string = ' _' * @@word_length
+	@@current_string = '_' * @@word_length
 	@@word = answer(@@word_length, @@contents)
 
 	erb :hangman, :locals => {
@@ -41,6 +41,10 @@ post '/new/' do
 		@@turns += 1
 	else
 		@@current_string = show_dash(@@current_string, guess, letter_index)
+	end
+
+	if @@current_string == @@word
+		redirect '/gameover/'
 	end
 
 	if @@turns == 5
@@ -104,12 +108,8 @@ end
 
 def check_win(current_string, word, turns)
 	if current_string == word && turns < 5
-		@@win =true
 		message = "You guessed the word! Play again?"
-		# redirect '/gameover/'
 	elsif current_string != word && turns == 5
-		@@win == true
-		# redirect '/gameover/'
 		message = "Sorry, the word was #{word}. Play again?"
 	else
 		@@win == false
@@ -123,12 +123,6 @@ def new_game
 	@@word = ''
 	@@win = false
 	@@word_length = 0
-	@@current_string = ' _' * @@word_length
+	@@current_string = '_' * @@word_length
 	redirect '/'
 end
-
-
-def set_message(guess, word)
-	"Your guess is #{guess} and the word is #{word}"
-end
-
