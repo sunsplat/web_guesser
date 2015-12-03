@@ -28,9 +28,8 @@ get '/new/' do #get setup
 
 	erb :hangman, :locals => {
 		:turns => @@turns, 
-		:word => @@word, 
-		:turns => @@turns
 	}
+
 end
 
 post '/new/' do
@@ -57,8 +56,6 @@ post '/new/' do
 		:turns => @@turns, 
 		:word_length => @@word_length,
 		:wrong_guess => @@wrong_guess,
-		# :message => message, 
-		:word => @@word
 	}
 end
 
