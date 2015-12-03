@@ -67,19 +67,22 @@ get '/gameover/' do
 	erb :hangman_win, :locals => {:message => message}
 end
 
+# Returns an integer for the difficulty level user selected
 def choose_difficulty(choice)
-	# choice = choice.chomp.downcase
+
 	if choice == "easy"
 		word_length = 3
-
 	elsif choice == "medium"
 		word_length = 10
 	else
 		word_length = 15
 	end
+
 	return word_length
+
 end
 
+# Selects a random word from the imported dictionary
 def answer(word_length, all_words)
 	possible_words = all_words.select { |line| line.chomp.length == word_length }
   
@@ -87,7 +90,7 @@ def answer(word_length, all_words)
   return @@word
 end	
 
-
+# Finds the index number in the word for correctly guessed letter
 def check_guesses(guess, word)
 	letter_index = []
 	word = word.split('')
@@ -98,6 +101,7 @@ def check_guesses(guess, word)
 	letter_index.empty? ? nil : letter_index
 end
 
+# Creates the word using dashes
 def show_dash(current_string, guess, letter_index)
 	current_string = current_string.split('')
 	letter_index.each {|x| current_string[x] = guess}
@@ -106,6 +110,7 @@ def show_dash(current_string, guess, letter_index)
 	return current_string.join('')
 end
 
+# Checks if the user guessed the word
 def check_win(current_string, word, turns)
 	if current_string == word && turns < 5
 		message = "You guessed the word! Play again?"
@@ -116,7 +121,7 @@ def check_win(current_string, word, turns)
 	end
 end
 
-
+# New game defaults
 def new_game
 	@@turns = 0
 	guess = nil
