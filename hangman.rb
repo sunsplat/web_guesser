@@ -13,7 +13,6 @@ get '/' do
 end
 
 post '/' do
-
 	@@choice = params["level"]
 	@@wrong_guess = []
 	@@win = false
@@ -89,6 +88,7 @@ end
 
 # Finds the index number in the word for correctly guessed letter
 def check_guesses(guess, word)
+	guess = guess.downcase
 	letter_index = []
 	word = word.split('')
 	# saves index number to display letter in view
@@ -100,6 +100,7 @@ end
 
 # Creates the word using dashes
 def show_dash(current_string, guess, letter_index)
+	guess = guess.downcase
 	current_string = current_string.split('')
 	letter_index.each {|x| current_string[x] = guess}
 
