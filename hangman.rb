@@ -65,7 +65,7 @@ end
 
 # Returns an integer for the difficulty level user selected
 def choose_difficulty(choice)
-
+	choice = choice.downcase
 	if choice == "easy"
 		word_length = 3
 	elsif choice == "medium"
