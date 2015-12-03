@@ -6,7 +6,6 @@ require 'sinatra/reloader'
 file = File.open("enable.txt", "r") 
 @@contents = file.read.split
 
-@@turns = 0
 # @@current_string = '_' * @@word_length
 
 get '/' do
@@ -14,8 +13,11 @@ get '/' do
 end
 
 post '/' do
+
 	@@choice = params["level"]
 	@@wrong_guess = []
+	@@win = false
+	@@turns = 0
 	redirect '/new/' if @@choice
 end
 
@@ -24,7 +26,7 @@ get '/new/' do #get setup
 	@@current_string = '_' * @@word_length
 	@@word = answer(@@word_length, @@contents)
 	message = set_message(@@current_string, @@word)
-	# @@turns = 5
+
 	erb :hangman, :locals => {
 		:turns => @@turns, 
 		:message => message, 
@@ -34,7 +36,6 @@ get '/new/' do #get setup
 end
 
 post '/new/' do
-		# word_length = choose_difficulty(@@choice)
 		guess = params["guess"]
 		letter_index = check_guesses(guess, @@word)
 		if letter_index.nil?
@@ -42,20 +43,25 @@ post '/new/' do
 			@@turns += 1
 		else
 			@@current_string = show_dash(@@current_string, guess, letter_index)
+			if @@win == true
+			redirect '/gameover/'
+			end
 		end
 		message = check_win(@@current_string, @@word, @@turns)
-
-		# message = set_message(@@current_string, @@word)
-
+		
 	erb :hangman, :locals => {
 		:turns => @@turns, 
 		:word_length => @@word_length,
 		:wrong_guess => @@wrong_guess,
-		:message => message, 
+		# :message => message, 
 		:word => @@word
 	}
 end
 
+get '/gameover/' do
+	message = check_win(@@current_string, @@word, @@turns)
+	erb :hangman_win, :locals => {:message => message}
+end
 
 def choose_difficulty(choice)
 	# choice = choice.chomp.downcase
@@ -104,6 +110,7 @@ def check_win(current_string, word, turns)
 		@@win == true
 		message = "Sorry, the word was #{word}. Play again?"
 	else
+		@@win == false
 		message = "Guess Again!"
 	end
 
@@ -111,7 +118,7 @@ end
 
 
 def new_game
-	@@turns = 5
+	@@turns = 0
 	guess = nil
 	@@word = ''
 	@@win = false
