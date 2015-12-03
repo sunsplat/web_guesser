@@ -2,27 +2,25 @@
 	<head>
 		<title>Ellen's Hangman</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+
 	</head>
 
 	<body>
-		<form action="/new/" method="post">
-			<h1>WORD: 
-					<%= @@current_string %>
-			</h1>
-			<p>Guess a letter</p>
-			<input class='guess' type='text' name='guess' />
-			<input class='submit' type='submit' value='Guess' />
-		</form>
+		<div class="center" style="text-align: center; margin: auto auto;">
+			<form action="/new/" method="post">
+				<h1>WORD: 
+						<%= @@current_string %>
+				</h1>
+				<p>Guess a letter:</p>
+				<input class='guess' type='text' name='guess' />
+				<button class="button-primary">Guess</button>
+			</form>
 
-		<p>The word is <%= @@word %></p>
-		<p>Turns left: <%= 5 - @@turns %></p>
-		<p>Wrong guesses: <%= @@wrong_guess.join(', ') %></p>
-		<p><%= message %></p>
+			<p>The word is <%= @@word %></p>
+			<p>Turns left: <%= 5 - @@turns %></p>
+			<p>Wrong guesses: <%= @@wrong_guess.join(', ') %></p>
 
-		<form action="/" method="get">
-			<button class="button-primary">Play Again</button>
-			<input type="submit" value="Play Again" class="again">
-		</form>
+		</div>
 
 	</body>
 
