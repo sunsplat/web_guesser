@@ -36,18 +36,18 @@ get '/new/' do #get setup
 end
 
 post '/new/' do
-		guess = params["guess"]
-		letter_index = check_guesses(guess, @@word)
-		if letter_index.nil?
-			@@wrong_guess.push(guess)
-			@@turns += 1
-		else
-			@@current_string = show_dash(@@current_string, guess, letter_index)
-			if @@win == true
-			redirect '/gameover/'
-			end
+	guess = params["guess"]
+	letter_index = check_guesses(guess, @@word)
+	if letter_index.nil?
+		@@wrong_guess.push(guess)
+		@@turns += 1
+	else
+		@@current_string = show_dash(@@current_string, guess, letter_index)
+		if @@win == true
+		redirect '/gameover/'
 		end
-		message = check_win(@@current_string, @@word, @@turns)
+	end
+	message = check_win(@@current_string, @@word, @@turns)
 		
 	erb :hangman, :locals => {
 		:turns => @@turns, 
