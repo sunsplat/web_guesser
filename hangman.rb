@@ -67,7 +67,7 @@ end
 def choose_difficulty(choice)
 	choice = choice.downcase
 	if choice == "easy"
-		word_length = rand(1..5)
+		word_length = rand(3..5)
 	elsif choice == "medium"
 		word_length = rand(6..10)
 	else
