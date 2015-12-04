@@ -4,17 +4,18 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 		<style>
 			.word {
-				letter-spacing: 1em;
+				letter-spacing: 0.5em;
 			}
 		</style>
 	</head>
 
 	<body>
+		<h1></h1>
 		<div class="center" style="text-align: center; margin: auto auto;">
 			<form action="/new/" method="post">
 				<h2 class="word"><%= @@current_string %></h2>
 				<p>Wrong guesses: <%= @@wrong_guess.join(', ').upcase %></p>
-				<input class='guess' type='text' name='guess' placeholder="Guess a letter" />
+				<input class='guess' type='text' name='guess' autofocus placeholder="Guess a letter" />
 				<button class="button-primary">Guess</button>
 			</form>
 
