@@ -2,22 +2,23 @@
 	<head>
 		<title>Ellen's Hangman</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
-
+		<style>
+			.word {
+				letter-spacing: 1em;
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="center" style="text-align: center; margin: auto auto;">
 			<form action="/new/" method="post">
-				<h1>WORD: 
-						<%= @@current_string %>
-				</h1>
-				<p>Guess a letter:</p>
-				<input class='guess' type='text' name='guess' />
+				<h2 class="word"><%= @@current_string %></h2>
+				<p>Wrong guesses: <%= @@wrong_guess.join(', ').upcase %></p>
+				<input class='guess' type='text' name='guess' placeholder="Guess a letter" />
 				<button class="button-primary">Guess</button>
 			</form>
 
 			<p>Turns left: <%= 5 - @@turns %></p>
-			<p>Wrong guesses: <%= @@wrong_guess.join(', ') %></p>
 
 		</div>
 
