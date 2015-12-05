@@ -6,6 +6,10 @@
 			.word {
 				letter-spacing: 0.5em;
 			}
+
+			.error {
+				color: red;
+			}
 		</style>
 	</head>
 
@@ -15,6 +19,7 @@
 			<form action="/new/" method="post">
 				<h2 class="word"><%= @@current_string %></h2>
 				<p>Wrong guesses: <%= @@wrong_guess.join(', ').upcase %></p>
+				<p class="error"><%= @@try_again %></p>
 				<input class='guess' type='text' name='guess' autofocus placeholder="Guess a letter" />
 				<button class="button-primary">Guess</button>
 			</form>
