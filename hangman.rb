@@ -33,33 +33,34 @@ get '/new/' do #get setup
 end
 
 post '/new/' do
-	guess = params["guess"]
-	if guess.length > 1
+	if params["guess"].length != 1
 		@@try_again = "Please guess one letter at a time."
-	end
+	else
+		guess = params["guess"]
+		letter_index = check_guesses(guess, @@word)
 
-	letter_index = check_guesses(guess, @@word)
 
-	if letter_index.nil?
-		if @@wrong_guess.include?(guess)
-				@@try_again = "You already guessed that letter"
+		if letter_index.nil?
+			if @@wrong_guess.include?(guess)
+					@@try_again = "You already guessed that letter"
+			else
+				@@try_again = ''
+				@@wrong_guess.push(guess)
+				@@turns += 1
+			end
 		else
-			@@try_again = ''
-			@@wrong_guess.push(guess)
-			@@turns += 1
+			@@current_string = show_dash(@@current_string, guess, letter_index)
 		end
-	else
-		@@current_string = show_dash(@@current_string, guess, letter_index)
-	end
 
-	if @@current_string == @@word
-		redirect '/gameover/'
-	end
+		if @@current_string == @@word
+			redirect '/gameover/'
+		end
 
-	if @@turns == 5
-		redirect '/gameover/'
-	else
-		check_win(@@current_string, @@word, @@turns)
+		if @@turns == 5
+			redirect '/gameover/'
+		else
+			check_win(@@current_string, @@word, @@turns)
+		end
 	end
 
 	erb :hangman, :locals => {
