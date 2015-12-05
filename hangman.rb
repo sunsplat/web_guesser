@@ -37,6 +37,7 @@ post '/new/' do
 		@@try_again = "Please guess one letter at a time."
 	else
 		guess = params["guess"]
+		@@try_again = ''
 		letter_index = check_guesses(guess, @@word)
 
 
