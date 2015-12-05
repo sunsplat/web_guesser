@@ -9,15 +9,27 @@ file = File.open("enable.txt", "r")
 # @@current_string = '_' * @@word_length
 
 get '/' do
-	erb :hangman_level
+	enter_level = ''
+	erb :hangman_level, :locals => {
+		:enter_level => enter_level,
+	}
 end
 
 post '/' do
-	@@choice = params["level"]
-	@@wrong_guess = []
-	@@win = false
-	@@turns = 0
-	redirect '/new/' if @@choice
+	if params["level"] == ''
+		enter_level = "Please enter a difficulty level"
+		# redirect '/'
+	else
+		@@choice = params["level"]
+		enter_level = ''
+		@@wrong_guess = []
+		@@win = false
+		@@turns = 0
+		redirect '/new/' if @@choice
+	end
+	erb :hangman_level, :locals => {
+		:enter_level => enter_level,
+	}
 end
 
 get '/new/' do #get setup
@@ -133,15 +145,4 @@ def check_win(current_string, word, turns)
 	else
 		@@win == false
 	end
-end
-
-# New game defaults
-def new_game
-	@@turns = 0
-	guess = nil
-	@@word = ''
-	@@win = false
-	@@word_length = 0
-	@@current_string = '_' * @@word_length
-	redirect '/'
 end
