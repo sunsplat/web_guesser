@@ -21,6 +21,7 @@ post '/' do
 end
 
 get '/new/' do #get setup
+	@@try_again = ''
 	@@word_length = choose_difficulty(@@choice)
 	@@current_string = '_' * @@word_length
 	@@word = answer(@@word_length, @@contents)
@@ -33,10 +34,20 @@ end
 
 post '/new/' do
 	guess = params["guess"]
+	if guess.length > 1
+		@@try_again = "Please guess one letter at a time."
+	end
+
 	letter_index = check_guesses(guess, @@word)
+
 	if letter_index.nil?
-		@@wrong_guess.push(guess)
-		@@turns += 1
+		if @@wrong_guess.include?(guess)
+				@@try_again = "You already guessed that letter"
+		else
+			@@try_again = ''
+			@@wrong_guess.push(guess)
+			@@turns += 1
+		end
 	else
 		@@current_string = show_dash(@@current_string, guess, letter_index)
 	end
@@ -52,6 +63,7 @@ post '/new/' do
 	end
 
 	erb :hangman, :locals => {
+		:try_again => @@try_again,
 		:turns => @@turns, 
 		:word_length => @@word_length,
 		:wrong_guess => @@wrong_guess,
