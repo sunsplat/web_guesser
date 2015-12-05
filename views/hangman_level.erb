@@ -7,6 +7,9 @@
 			h1 {
 				text-align: center;
 			}
+			.error {
+				color: red;
+			}
 		</style>
 	</head>
 	<body>
@@ -14,6 +17,7 @@
 			<h1>Play Hangman!</h1>
 			<form action='/' method="post">
 				<h3>Choose a level: Easy, Medium, or Difficult</h3>
+				<p class="error"><%= enter_level %></p>
 				<input class='level' placeholder="Easy, Medium, or Difficult" type='text' name='level' autofocus/>
 				<button class="button-primary">Play</button>
 			</form>
