@@ -33,7 +33,9 @@ get '/new/' do #get setup
 end
 
 post '/new/' do
-	if params["guess"].length != 1
+	if params["guess"] == ''
+		@@try_again = "Please guess a letter."
+	elsif params["guess"].length != 1
 		@@try_again = "Please guess one letter at a time."
 	else
 		guess = params["guess"]
